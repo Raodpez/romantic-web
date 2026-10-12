@@ -25,7 +25,6 @@ const contenidoDiario = [
     }
 ];
 
-// Elegir contenido de hoy
 const hoy = new Date();
 const inicioAno = new Date(hoy.getFullYear(), 0, 0);
 const diaDelAno = Math.floor((hoy - inicioAno) / (1000 * 60 * 60 * 24));
@@ -36,16 +35,13 @@ function cargarContenido(indice) {
     document.getElementById('frase').innerText = `"${contenido.frase}"`;
     document.getElementById('reproductor-titulo').innerText = contenido.titulo;
 
-    // Audio voz
     const audioVoz = document.getElementById('audio-voz');
     audioVoz.src = contenido.voz;
 
-    // Audio música
     const audioMusica = document.getElementById('audio-musica');
     audioMusica.src = contenido.musica;
     audioMusica.load();
 
-    // Resetear barra de progreso
     document.getElementById('barra-progreso').style.width = '0%';
     document.getElementById('tiempo-actual').innerText = '0:00';
     document.getElementById('btn-play').innerText = '▶';
@@ -56,7 +52,7 @@ cargarContenido(indiceActual);
 // ==========================================
 // 2. CONTADOR
 // ==========================================
-const fechaInicio = new Date(2023, 0, 1); // ⚠️ Cambia esta fecha
+const fechaInicio = new Date(2022, 6, 11); // ⚠️ Cambia esta fecha
 
 function actualizarContador() {
     const ahora = new Date();
@@ -145,7 +141,6 @@ audioMusica.addEventListener('ended', () => {
     barraProgreso.style.width = '0%';
 });
 
-// Click en la barra para saltar
 barraContenedor.addEventListener('click', (e) => {
     if (audioMusica.duration) {
         const rect = barraContenedor.getBoundingClientRect();
@@ -176,7 +171,87 @@ audioVoz.addEventListener('ended', () => {
 });
 
 // ==========================================
-// 5. SELECTOR DE TEMAS
+// 5. ANIMACIONES DE FONDO (AHORA VA ANTES DEL SELECTOR)
+// ==========================================
+const contenedorAnimaciones = document.getElementById('animaciones-fondo');
+let intervaloAnimaciones = null;
+
+function limpiarAnimaciones() {
+    if (contenedorAnimaciones) {
+        contenedorAnimaciones.innerHTML = '';
+    }
+    if (intervaloAnimaciones) {
+        clearInterval(intervaloAnimaciones);
+        intervaloAnimaciones = null;
+    }
+}
+
+function crearParticula(tipo) {
+    if (!contenedorAnimaciones) return;
+
+    const p = document.createElement('div');
+    p.classList.add('particula', tipo);
+    p.style.left = Math.random() * 100 + '%';
+
+    const duracion = Math.random() * 5 + 5;
+    p.style.animationDuration = duracion + 's';
+    p.style.animationDelay = Math.random() * 2 + 's';
+
+    if (tipo === 'petalo') {
+        const escala = Math.random() * 0.5 + 0.7;
+        p.style.width = (20 * escala) + 'px';
+        p.style.height = (20 * escala) + 'px';
+    } else if (tipo === 'copo-nieve') {
+        const escala = Math.random() * 0.8 + 0.6;
+        p.style.width = (8 * escala) + 'px';
+        p.style.height = (8 * escala) + 'px';
+    } else if (tipo === 'estrella') {
+        const escala = Math.random() * 1 + 0.5;
+        p.style.width = (4 * escala) + 'px';
+        p.style.height = (4 * escala) + 'px';
+    } else if (tipo === 'particula-magica') {
+        const escala = Math.random() * 0.5 + 0.8;
+        p.style.width = (6 * escala) + 'px';
+        p.style.height = (6 * escala) + 'px';
+    }
+
+    contenedorAnimaciones.appendChild(p);
+    setTimeout(() => {
+        if (p && p.parentNode) {
+            p.parentNode.removeChild(p);
+        }
+    }, (duracion + 3) * 1000);
+}
+
+function iniciarAnimaciones(tema) {
+    limpiarAnimaciones();
+    const temasClaros = ['rosa', 'violeta-claro', 'durazno'];
+
+    if (temasClaros.includes(tema)) {
+        intervaloAnimaciones = setInterval(() => crearParticula('petalo'), 600);
+        for (let i = 0; i < 10; i++) {
+            setTimeout(() => crearParticula('petalo'), i * 200);
+        }
+    } else {
+        intervaloAnimaciones = setInterval(() => {
+            const r = Math.random();
+            if (r > 0.6) crearParticula('copo-nieve');
+            else if (r > 0.3) crearParticula('estrella');
+            else crearParticula('particula-magica');
+        }, 500);
+        for (let i = 0; i < 15; i++) {
+            setTimeout(() => {
+                const r = Math.random();
+                if (r > 0.6) crearParticula('copo-nieve');
+                else if (r > 0.3) crearParticula('estrella');
+                else crearParticula('particula-magica');
+            }, i * 150);
+        }
+    }
+}
+
+// ==========================================
+// 6. SELECTOR DE TEMAS (AHORA VA DESPUÉS DE ANIMACIONES)
 // ==========================================
 const botonesTema = document.querySelectorAll('.btn-tema');
 const temasDisponibles = ['rosa', 'violeta-claro', 'durazno', 'violeta-oscuro', 'burgundy', 'azul-noche'];
@@ -200,68 +275,3 @@ if (temaGuardado && temasDisponibles.includes(temaGuardado)) {
 } else {
     aplicarTema('rosa');
 }
-
-// ==========================================
-// 6. ANIMACIONES DE FONDO
-// ==========================================
-const contenedorAnimaciones = document.getElementById('animaciones-fondo');
-let intervaloAnimaciones;
-
-function limpiarAnimaciones() {
-    contenedorAnimaciones.innerHTML = '';
-    if (intervaloAnimaciones) clearInterval(intervaloAnimaciones);
-}
-
-function crearParticula(tipo) {
-    const p = document.createElement('div');
-    p.classList.add('particula', tipo);
-    p.style.left = Math.random() * 100 + '%';
-
-    const duracion = Math.random() * 5 + 5;
-    p.style.animationDuration = duracion + 's';
-    p.style.animationDelay = Math.random() * 2 + 's';
-
-    if (tipo === 'petalo') {
-        const e = Math.random() * 0.5 + 0.7;
-        p.style.width = (20 * e) + 'px';
-        p.style.height = (20 * e) + 'px';
-    } else if (tipo === 'copo-nieve') {
-        const e = Math.random() * 0.8 + 0.6;
-        p.style.width = (8 * e) + 'px';
-        p.style.height = (8 * e) + 'px';
-    } else if (tipo === 'estrella') {
-        const e = Math.random() * 1 + 0.5;
-        p.style.width = (4 * e) + 'px';
-        p.style.height = (4 * e) + 'px';
-    }
-
-    contenedorAnimaciones.appendChild(p);
-    setTimeout(() => { if (p.parentNode) p.parentNode.removeChild(p); }, (duracion + 3) * 1000);
-}
-
-function iniciarAnimaciones(tema) {
-    limpiarAnimaciones();
-    const claros = ['rosa', 'violeta-claro', 'durazno'];
-
-    if (claros.includes(tema)) {
-        intervaloAnimaciones = setInterval(() => crearParticula('petalo'), 500);
-        for (let i = 0; i < 8; i++) setTimeout(() => crearParticula('petalo'), i * 200);
-    } else {
-        intervaloAnimaciones = setInterval(() => {
-            const r = Math.random();
-            if (r > 0.6) crearParticula('copo-nieve');
-            else if (r > 0.3) crearParticula('estrella');
-            else crearParticula('particula-magica');
-        }, 400);
-        for (let i = 0; i < 12; i++) {
-            setTimeout(() => {
-                const r = Math.random();
-                if (r > 0.6) crearParticula('copo-nieve');
-                else if (r > 0.3) crearParticula('estrella');
-                else crearParticula('particula-magica');
-            }, i * 150);
-        }
-    }
-}
-
-iniciarAnimaciones(temaGuardado || 'rosa');
