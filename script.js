@@ -1,42 +1,83 @@
 // ==========================================
-// 1. CONFIGURACIÓN DEL CONTADOR
+// 1. CONTENIDO DIARIO
 // ==========================================
-// ⚠️ CAMBIA ESTA FECHA por el día exacto en que empezó vuestra relación
-const fechaInicio = new Date(2022, 6, 11); // Ejemplo: 1 de Enero de 2023
+const contenidoDiario = [
+    {
+        frase: "Eres la casualidad más bonita que el destino supo regalarme.",
+        musica: "assets/audios/musica/cancion1.mp3",
+        voz: "assets/audios/voz/voz1.mp3",
+        titulo: "Canción 1",
+        portada: ""
+    },
+    {
+        frase: "No sé hacia dónde voy, pero sé que quiero que estés a mi lado.",
+        musica: "assets/audios/musica/cancion2.mp3",
+        voz: "assets/audios/voz/voz2.mp3",
+        titulo: "Canción 2",
+        portada: ""
+    },
+    {
+        frase: "Contigo, hasta el silencio tiene la melodía perfecta.",
+        musica: "assets/audios/musica/cancion3.mp3",
+        voz: "assets/audios/voz/voz3.mp3",
+        titulo: "Canción 3",
+        portada: ""
+    }
+];
+
+// Elegir contenido de hoy
+const hoy = new Date();
+const inicioAno = new Date(hoy.getFullYear(), 0, 0);
+const diaDelAno = Math.floor((hoy - inicioAno) / (1000 * 60 * 60 * 24));
+let indiceActual = diaDelAno % contenidoDiario.length;
+
+function cargarContenido(indice) {
+    const contenido = contenidoDiario[indice];
+    document.getElementById('frase').innerText = `"${contenido.frase}"`;
+    document.getElementById('reproductor-titulo').innerText = contenido.titulo;
+
+    // Audio voz
+    const audioVoz = document.getElementById('audio-voz');
+    audioVoz.src = contenido.voz;
+
+    // Audio música
+    const audioMusica = document.getElementById('audio-musica');
+    audioMusica.src = contenido.musica;
+    audioMusica.load();
+
+    // Resetear barra de progreso
+    document.getElementById('barra-progreso').style.width = '0%';
+    document.getElementById('tiempo-actual').innerText = '0:00';
+    document.getElementById('btn-play').innerText = '▶';
+}
+
+cargarContenido(indiceActual);
+
+// ==========================================
+// 2. CONTADOR
+// ==========================================
+const fechaInicio = new Date(2023, 0, 1); // ⚠️ Cambia esta fecha
 
 function actualizarContador() {
     const ahora = new Date();
-    
-    // Calcular años, meses, semanas, días
     let anos = ahora.getFullYear() - fechaInicio.getFullYear();
     let meses = ahora.getMonth() - fechaInicio.getMonth();
     let dias = ahora.getDate() - fechaInicio.getDate();
-    
-    // Ajustar si el día actual es menor que el día de inicio
+
     if (dias < 0) {
         meses--;
-        // Obtener el último día del mes anterior
-        const ultimoDiaMesAnterior = new Date(ahora.getFullYear(), ahora.getMonth(), 0).getDate();
-        dias += ultimoDiaMesAnterior;
+        dias += new Date(ahora.getFullYear(), ahora.getMonth(), 0).getDate();
     }
-    
-    // Ajustar si los meses son negativos
-    if (meses < 0) {
-        anos--;
-        meses += 12;
-    }
-    
-    // Calcular semanas a partir de los días restantes
+    if (meses < 0) { anos--; meses += 12; }
+
     const semanas = Math.floor(dias / 7);
     const diasRestantes = dias % 7;
-    
-    // Calcular horas, minutos, segundos
-    const diferenciaTotal = ahora - fechaInicio;
-    const horas = Math.floor((diferenciaTotal % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const minutos = Math.floor((diferenciaTotal % (1000 * 60 * 60)) / (1000 * 60));
-    const segundos = Math.floor((diferenciaTotal % (1000 * 60)) / 1000);
-    
-    // Actualizar el DOM
+
+    const diff = ahora - fechaInicio;
+    const horas = Math.floor((diff % (1000*60*60*24)) / (1000*60*60));
+    const minutos = Math.floor((diff % (1000*60*60)) / (1000*60));
+    const segundos = Math.floor((diff % (1000*60)) / 1000);
+
     document.getElementById('anos').innerText = anos;
     document.getElementById('meses').innerText = meses;
     document.getElementById('semanas').innerText = semanas;
@@ -45,236 +86,182 @@ function actualizarContador() {
     document.getElementById('minutos').innerText = minutos;
     document.getElementById('segundos').innerText = segundos;
 }
-
 setInterval(actualizarContador, 1000);
-actualizarContador(); // Llamar una vez al inicio
-
+actualizarContador();
 
 // ==========================================
-// 2. CONFIGURACIÓN DEL CONTENIDO DIARIO
+// 3. REPRODUCTOR DE MÚSICA
 // ==========================================
-// Añade aquí tantas parejas de frase/música/voz como días quieras.
-// El sistema elegirá una diferente cada día automáticamente.
-const contenidoDiario = [
-    {
-        frase: "Eres la casualidad más bonita que el destino supo regalarme.",
-        musica: "assets/audios/musica/cancion1.mp3",
-        voz: "assets/audios/voz/voz1.mp3"
-    },
-    {
-        frase: "No sé hacia dónde voy, pero sé que quiero que estés a mi lado.",
-        musica: "assets/audios/musica/cancion2.mp3",
-        voz: "assets/audios/voz/voz2.mp3"
-    },
-    {
-        frase: "Contigo, hasta el silencio tiene la melodía perfecta.",
-        musica: "assets/audios/musica/cancion3.mp3",
-        voz: "assets/audios/voz/voz3.mp3"
-    }
-    // ¡Sigue añadiendo objetos aquí!
-];
-
-// Lógica para elegir el contenido de HOY
-// Usamos el día del año para que sea cíclico y cambie cada 24h
-const hoy = new Date();
-const inicioAno = new Date(hoy.getFullYear(), 0, 0);
-const diff = hoy - inicioAno;
-const diaDelAno = Math.floor(diff / (1000 * 60 * 60 * 24));
-
-// Usamos el módulo (%) para que si hay 3 frases, el día 4 vuelva a ser la 1, etc.
-const indiceHoy = diaDelAno % contenidoDiario.length; 
-const contenidoDeHoy = contenidoDiario[indiceHoy];
-
-// Pintar la frase en la web
-document.getElementById('frase').innerText = `"${contenidoDeHoy.frase}"`;
-
-// Configurar las rutas de los audios
-const audioVoz = document.getElementById('audio-voz');
 const audioMusica = document.getElementById('audio-musica');
+const btnPlay = document.getElementById('btn-play');
+const btnAnterior = document.getElementById('btn-anterior');
+const btnSiguiente = document.getElementById('btn-siguiente');
+const barraProgreso = document.getElementById('barra-progreso');
+const barraContenedor = document.querySelector('.barra-progreso-contenedor');
+const tiempoActual = document.getElementById('tiempo-actual');
+const tiempoTotal = document.getElementById('tiempo-total');
 
-audioVoz.src = contenidoDeHoy.voz;
-audioMusica.src = contenidoDeHoy.musica;
+function formatearTiempo(segundos) {
+    if (isNaN(segundos)) return '0:00';
+    const m = Math.floor(segundos / 60);
+    const s = Math.floor(segundos % 60);
+    return `${m}:${s.toString().padStart(2, '0')}`;
+}
 
-
-// ==========================================
-// 3. CONTROLES DE REPRODUCCIÓN
-// ==========================================
-
-// Botón de tu voz
-document.getElementById('btn-voz').addEventListener('click', () => {
-    if (audioVoz.paused) {
-        audioVoz.play();
-        document.getElementById('btn-voz').innerText = '⏸️ Pausar mi voz';
-    } else {
-        audioVoz.pause();
-        document.getElementById('btn-voz').innerText = '🎙️ Escuchar mi voz';
-    }
-});
-
-// Cuando tu voz termina, volver al estado original
-audioVoz.addEventListener('ended', () => {
-    document.getElementById('btn-voz').innerText = '🎙️ Escuchar mi voz';
-});
-
-// Botón de música de fondo
-const btnMusica = document.getElementById('btn-musica');
-btnMusica.addEventListener('click', () => {
+btnPlay.addEventListener('click', () => {
     if (audioMusica.paused) {
         audioMusica.play();
-        btnMusica.innerText = '⏸️ Pausar música';
+        btnPlay.innerText = '⏸';
     } else {
         audioMusica.pause();
-        btnMusica.innerText = '▶️ Reproducir música';
+        btnPlay.innerText = '▶';
+    }
+});
+
+btnAnterior.addEventListener('click', () => {
+    indiceActual = (indiceActual - 1 + contenidoDiario.length) % contenidoDiario.length;
+    cargarContenido(indiceActual);
+});
+
+btnSiguiente.addEventListener('click', () => {
+    indiceActual = (indiceActual + 1) % contenidoDiario.length;
+    cargarContenido(indiceActual);
+});
+
+audioMusica.addEventListener('timeupdate', () => {
+    if (audioMusica.duration) {
+        const progreso = (audioMusica.currentTime / audioMusica.duration) * 100;
+        barraProgreso.style.width = progreso + '%';
+        tiempoActual.innerText = formatearTiempo(audioMusica.currentTime);
+    }
+});
+
+audioMusica.addEventListener('loadedmetadata', () => {
+    tiempoTotal.innerText = formatearTiempo(audioMusica.duration);
+});
+
+audioMusica.addEventListener('ended', () => {
+    btnPlay.innerText = '▶';
+    barraProgreso.style.width = '0%';
+});
+
+// Click en la barra para saltar
+barraContenedor.addEventListener('click', (e) => {
+    if (audioMusica.duration) {
+        const rect = barraContenedor.getBoundingClientRect();
+        const clickX = e.clientX - rect.left;
+        const porcentaje = clickX / rect.width;
+        audioMusica.currentTime = porcentaje * audioMusica.duration;
     }
 });
 
 // ==========================================
-// 4. SELECTOR DE TEMAS
+// 4. BOTÓN DE VOZ
+// ==========================================
+const audioVoz = document.getElementById('audio-voz');
+const btnVoz = document.getElementById('btn-voz');
+
+btnVoz.addEventListener('click', () => {
+    if (audioVoz.paused) {
+        audioVoz.play();
+        btnVoz.innerText = '⏸️ Pausar mi voz';
+    } else {
+        audioVoz.pause();
+        btnVoz.innerText = '🎙️ Escuchar mi voz';
+    }
+});
+
+audioVoz.addEventListener('ended', () => {
+    btnVoz.innerText = '🎙️ Escuchar mi voz';
+});
+
+// ==========================================
+// 5. SELECTOR DE TEMAS
 // ==========================================
 const botonesTema = document.querySelectorAll('.btn-tema');
 const temasDisponibles = ['rosa', 'violeta-claro', 'durazno', 'violeta-oscuro', 'burgundy', 'azul-noche'];
 
-// Función para aplicar un tema
 function aplicarTema(nombreTema) {
-    // Remover todas las clases de tema
-    temasDisponibles.forEach(tema => {
-        document.body.classList.remove(`tema-${tema}`);
-    });
-    
-    // Aplicar el nuevo tema
+    temasDisponibles.forEach(t => document.body.classList.remove(`tema-${t}`));
     document.body.classList.add(`tema-${nombreTema}`);
-    
-    // Guardar la preferencia en localStorage
     localStorage.setItem('tema-preferido', nombreTema);
+    iniciarAnimaciones(nombreTema);
 }
 
-// Event listeners para cada botón
 botonesTema.forEach(boton => {
     boton.addEventListener('click', () => {
-        const tema = boton.getAttribute('data-tema');
-        aplicarTema(tema);
+        aplicarTema(boton.getAttribute('data-tema'));
     });
 });
 
-// Cargar el tema guardado al iniciar (si existe)
 const temaGuardado = localStorage.getItem('tema-preferido');
 if (temaGuardado && temasDisponibles.includes(temaGuardado)) {
     aplicarTema(temaGuardado);
 } else {
-    // Si no hay tema guardado, aplicar el rosa por defecto
     aplicarTema('rosa');
 }
 
 // ==========================================
-// 5. ANIMACIONES DE FONDO SEGÚN TEMA
+// 6. ANIMACIONES DE FONDO
 // ==========================================
 const contenedorAnimaciones = document.getElementById('animaciones-fondo');
 let intervaloAnimaciones;
 
-// Función para limpiar las animaciones anteriores
 function limpiarAnimaciones() {
     contenedorAnimaciones.innerHTML = '';
-    if (intervaloAnimaciones) {
-        clearInterval(intervaloAnimaciones);
-    }
+    if (intervaloAnimaciones) clearInterval(intervaloAnimaciones);
 }
 
-// Función para crear una partícula
 function crearParticula(tipo) {
-    const particula = document.createElement('div');
-    particula.classList.add('particula', tipo);
-    
-    // Posición horizontal aleatoria
-    particula.style.left = Math.random() * 100 + '%';
-    
-    // Duración aleatoria
-    const duracion = Math.random() * 5 + 5; // Entre 5 y 10 segundos
-    particula.style.animationDuration = duracion + 's';
-    
-    // Delay aleatorio
-    particula.style.animationDelay = Math.random() * 2 + 's';
-    
-    // Tamaño aleatorio usando scale en un wrapper (no sobrescribe la animación)
+    const p = document.createElement('div');
+    p.classList.add('particula', tipo);
+    p.style.left = Math.random() * 100 + '%';
+
+    const duracion = Math.random() * 5 + 5;
+    p.style.animationDuration = duracion + 's';
+    p.style.animationDelay = Math.random() * 2 + 's';
+
     if (tipo === 'petalo') {
-        const escala = Math.random() * 0.5 + 0.7; // Entre 0.7 y 1.2
-        particula.style.width = (20 * escala) + 'px';
-        particula.style.height = (20 * escala) + 'px';
+        const e = Math.random() * 0.5 + 0.7;
+        p.style.width = (20 * e) + 'px';
+        p.style.height = (20 * e) + 'px';
     } else if (tipo === 'copo-nieve') {
-        const escala = Math.random() * 0.8 + 0.6; // Entre 0.6 y 1.4
-        particula.style.width = (8 * escala) + 'px';
-        particula.style.height = (8 * escala) + 'px';
+        const e = Math.random() * 0.8 + 0.6;
+        p.style.width = (8 * e) + 'px';
+        p.style.height = (8 * e) + 'px';
     } else if (tipo === 'estrella') {
-        const escala = Math.random() * 1 + 0.5; // Entre 0.5 y 1.5
-        particula.style.width = (4 * escala) + 'px';
-        particula.style.height = (4 * escala) + 'px';
+        const e = Math.random() * 1 + 0.5;
+        p.style.width = (4 * e) + 'px';
+        p.style.height = (4 * e) + 'px';
     }
-    
-    contenedorAnimaciones.appendChild(particula);
-    
-    // Eliminar la partícula después de que termine su animación
-    setTimeout(() => {
-        if (particula.parentNode) {
-            particula.parentNode.removeChild(particula);
-        }
-    }, (duracion + 2) * 1000);
+
+    contenedorAnimaciones.appendChild(p);
+    setTimeout(() => { if (p.parentNode) p.parentNode.removeChild(p); }, (duracion + 3) * 1000);
 }
 
-// Función para iniciar animaciones según el tema
 function iniciarAnimaciones(tema) {
     limpiarAnimaciones();
-    
-    const temasClaros = ['rosa', 'violeta-claro', 'durazno'];
-    const temasOscuros = ['violeta-oscuro', 'burgundy', 'azul-noche'];
-    
-    if (temasClaros.includes(tema)) {
-        // Animaciones para temas claros: solo pétalos
+    const claros = ['rosa', 'violeta-claro', 'durazno'];
+
+    if (claros.includes(tema)) {
+        intervaloAnimaciones = setInterval(() => crearParticula('petalo'), 500);
+        for (let i = 0; i < 8; i++) setTimeout(() => crearParticula('petalo'), i * 200);
+    } else {
         intervaloAnimaciones = setInterval(() => {
-            crearParticula('petalo');
-        }, 500); // Un pétalo cada 500ms
-        
-        // Crear algunas partículas iniciales
-        for (let i = 0; i < 8; i++) {
-            setTimeout(() => {
-                crearParticula('petalo');
-            }, i * 200);
-        }
-        
-    } else if (temasOscuros.includes(tema)) {
-        // Animaciones para temas oscuros: copos de nieve, estrellas y partículas mágicas
-        intervaloAnimaciones = setInterval(() => {
-            const rand = Math.random();
-            if (rand > 0.6) {
-                crearParticula('copo-nieve');
-            } else if (rand > 0.3) {
-                crearParticula('estrella');
-            } else {
-                crearParticula('particula-magica');
-            }
-        }, 400); // Una partícula cada 400ms
-        
-        // Crear algunas partículas iniciales
+            const r = Math.random();
+            if (r > 0.6) crearParticula('copo-nieve');
+            else if (r > 0.3) crearParticula('estrella');
+            else crearParticula('particula-magica');
+        }, 400);
         for (let i = 0; i < 12; i++) {
             setTimeout(() => {
-                const rand = Math.random();
-                if (rand > 0.6) {
-                    crearParticula('copo-nieve');
-                } else if (rand > 0.3) {
-                    crearParticula('estrella');
-                } else {
-                    crearParticula('particula-magica');
-                }
+                const r = Math.random();
+                if (r > 0.6) crearParticula('copo-nieve');
+                else if (r > 0.3) crearParticula('estrella');
+                else crearParticula('particula-magica');
             }, i * 150);
         }
     }
 }
 
-// Modificar la función aplicarTema para incluir las animaciones
-const aplicarTemaOriginal = aplicarTema;
-aplicarTema = function(nombreTema) {
-    aplicarTemaOriginal(nombreTema);
-    iniciarAnimaciones(nombreTema);
-};
-
-// Iniciar animaciones con el tema actual al cargar
-const temaInicial = localStorage.getItem('tema-preferido') || 'rosa';
-iniciarAnimaciones(temaInicial);
+iniciarAnimaciones(temaGuardado || 'rosa');
