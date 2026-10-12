@@ -14,37 +14,50 @@
     <!-- Contenedor de animaciones de fondo -->
     <div class="animaciones-fondo" id="animaciones-fondo"></div>
 
-    <!-- Selector de temas -->
-    <div class="selector-temas">
-        <button class="btn-tema" data-tema="rosa" title="Rosa Romántico (Claro)"></button>
-        <button class="btn-tema" data-tema="violeta-claro" title="Violeta Suave (Claro)"></button>
-        <button class="btn-tema" data-tema="durazno" title="Durazno Cálido (Claro)"></button>
-        <button class="btn-tema" data-tema="violeta-oscuro" title="Violeta Nocturno (Oscuro)"></button>
-        <button class="btn-tema" data-tema="burgundy" title="Vino Profundo (Oscuro)"></button>
-        <button class="btn-tema" data-tema="azul-noche" title="Azul Noche (Oscuro)"></button>
+    <!-- Selector de temas tipo FAB -->
+<div class="fab-temas" id="fab-temas">
+    <button class="fab-btn" id="fab-btn" title="Cambiar tema">🎨</button>
+    <div class="fab-menu" id="fab-menu">
+        <button class="btn-tema" data-tema="rosa" title="Rosa Romántico"></button>
+        <button class="btn-tema" data-tema="violeta-claro" title="Violeta Suave"></button>
+        <button class="btn-tema" data-tema="durazno" title="Durazno Cálido"></button>
+        <button class="btn-tema" data-tema="violeta-oscuro" title="Violeta Nocturno"></button>
+        <button class="btn-tema" data-tema="burgundy" title="Vino Profundo"></button>
+        <button class="btn-tema" data-tema="azul-noche" title="Azul Noche"></button>
     </div>
+</div>
 
-    <!-- Reproductor de música flotante -->
+    <!-- Reproductor (ahora con versión mini para móvil) -->
     <div class="reproductor" id="reproductor">
-        <div class="reproductor-portada" id="reproductor-portada">
-            <div class="portada-icono">🎵</div>
-        </div>
-        <div class="reproductor-info">
-            <p class="reproductor-titulo" id="reproductor-titulo">Canción de hoy</p>
-            <div class="barra-progreso-contenedor">
-                <div class="barra-progreso" id="barra-progreso"></div>
+        <div class="reproductor-mini" id="reproductor-mini">
+            <div class="mini-portada">🎵</div>
+            <div class="mini-info">
+                <p class="mini-titulo" id="mini-titulo">Canción de hoy</p>
+                <div class="mini-barra"><div class="mini-barra-progreso" id="mini-barra-progreso"></div></div>
             </div>
-            <div class="reproductor-tiempo">
-                <span id="tiempo-actual">0:00</span>
-                <span id="tiempo-total">0:00</span>
+            <button class="mini-play" id="mini-play">▶</button>
+        </div>
+        
+        <div class="reproductor-expandido" id="reproductor-expandido">
+            <div class="reproductor-portada" id="reproductor-portada">
+                <div class="portada-icono">🎵</div>
+            </div>
+            <div class="reproductor-info">
+                <p class="reproductor-titulo" id="reproductor-titulo">Canción de hoy</p>
+                <div class="barra-progreso-contenedor">
+                    <div class="barra-progreso" id="barra-progreso"></div>
+                </div>
+                <div class="reproductor-tiempo">
+                    <span id="tiempo-actual">0:00</span>
+                    <span id="tiempo-total">0:00</span>
+                </div>
+            </div>
+            <div class="reproductor-controles">
+                <button class="btn-control" id="btn-anterior" title="Anterior">⏮</button>
+                <button class="btn-control btn-play" id="btn-play" title="Reproducir">▶</button>
+                <button class="btn-control" id="btn-siguiente" title="Siguiente">⏭</button>
             </div>
         </div>
-        <div class="reproductor-controles">
-            <button class="btn-control" id="btn-anterior" title="Anterior">⏮</button>
-            <button class="btn-control btn-play" id="btn-play" title="Reproducir">▶</button>
-            <button class="btn-control" id="btn-siguiente" title="Siguiente">⏭</button>
-        </div>
-        <audio id="audio-musica" preload="auto"></audio>
     </div>
 
     <!-- Contenido principal -->
