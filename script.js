@@ -164,3 +164,117 @@ if (temaGuardado && temasDisponibles.includes(temaGuardado)) {
     // Si no hay tema guardado, aplicar el rosa por defecto
     aplicarTema('rosa');
 }
+
+// ==========================================
+// 5. ANIMACIONES DE FONDO SEGÚN TEMA
+// ==========================================
+const contenedorAnimaciones = document.getElementById('animaciones-fondo');
+let intervaloAnimaciones;
+
+// Función para limpiar las animaciones anteriores
+function limpiarAnimaciones() {
+    contenedorAnimaciones.innerHTML = '';
+    if (intervaloAnimaciones) {
+        clearInterval(intervaloAnimaciones);
+    }
+}
+
+// Función para crear una partícula
+function crearParticula(tipo) {
+    const particula = document.createElement('div');
+    particula.classList.add('particula', tipo);
+    
+    // Posición horizontal aleatoria
+    particula.style.left = Math.random() * 100 + '%';
+    
+    // Duración aleatoria
+    const duracion = Math.random() * 5 + 5; // Entre 5 y 10 segundos
+    particula.style.animationDuration = duracion + 's';
+    
+    // Delay aleatorio
+    particula.style.animationDelay = Math.random() * 2 + 's';
+    
+    // Tamaño aleatorio usando scale en un wrapper (no sobrescribe la animación)
+    if (tipo === 'petalo') {
+        const escala = Math.random() * 0.5 + 0.7; // Entre 0.7 y 1.2
+        particula.style.width = (20 * escala) + 'px';
+        particula.style.height = (20 * escala) + 'px';
+    } else if (tipo === 'copo-nieve') {
+        const escala = Math.random() * 0.8 + 0.6; // Entre 0.6 y 1.4
+        particula.style.width = (8 * escala) + 'px';
+        particula.style.height = (8 * escala) + 'px';
+    } else if (tipo === 'estrella') {
+        const escala = Math.random() * 1 + 0.5; // Entre 0.5 y 1.5
+        particula.style.width = (4 * escala) + 'px';
+        particula.style.height = (4 * escala) + 'px';
+    }
+    
+    contenedorAnimaciones.appendChild(particula);
+    
+    // Eliminar la partícula después de que termine su animación
+    setTimeout(() => {
+        if (particula.parentNode) {
+            particula.parentNode.removeChild(particula);
+        }
+    }, (duracion + 2) * 1000);
+}
+
+// Función para iniciar animaciones según el tema
+function iniciarAnimaciones(tema) {
+    limpiarAnimaciones();
+    
+    const temasClaros = ['rosa', 'violeta-claro', 'durazno'];
+    const temasOscuros = ['violeta-oscuro', 'burgundy', 'azul-noche'];
+    
+    if (temasClaros.includes(tema)) {
+        // Animaciones para temas claros: solo pétalos
+        intervaloAnimaciones = setInterval(() => {
+            crearParticula('petalo');
+        }, 500); // Un pétalo cada 500ms
+        
+        // Crear algunas partículas iniciales
+        for (let i = 0; i < 8; i++) {
+            setTimeout(() => {
+                crearParticula('petalo');
+            }, i * 200);
+        }
+        
+    } else if (temasOscuros.includes(tema)) {
+        // Animaciones para temas oscuros: copos de nieve, estrellas y partículas mágicas
+        intervaloAnimaciones = setInterval(() => {
+            const rand = Math.random();
+            if (rand > 0.6) {
+                crearParticula('copo-nieve');
+            } else if (rand > 0.3) {
+                crearParticula('estrella');
+            } else {
+                crearParticula('particula-magica');
+            }
+        }, 400); // Una partícula cada 400ms
+        
+        // Crear algunas partículas iniciales
+        for (let i = 0; i < 12; i++) {
+            setTimeout(() => {
+                const rand = Math.random();
+                if (rand > 0.6) {
+                    crearParticula('copo-nieve');
+                } else if (rand > 0.3) {
+                    crearParticula('estrella');
+                } else {
+                    crearParticula('particula-magica');
+                }
+            }, i * 150);
+        }
+    }
+}
+
+// Modificar la función aplicarTema para incluir las animaciones
+const aplicarTemaOriginal = aplicarTema;
+aplicarTema = function(nombreTema) {
+    aplicarTemaOriginal(nombreTema);
+    iniciarAnimaciones(nombreTema);
+};
+
+// Iniciar animaciones con el tema actual al cargar
+const temaInicial = localStorage.getItem('tema-preferido') || 'rosa';
+iniciarAnimaciones(temaInicial);
