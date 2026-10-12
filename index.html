@@ -3,24 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Warm Place💖</title>
+    <title>Nuestra Historia 💖</title>
     <link rel="stylesheet" href="styles.css">
-    
-    <!-- Importamos fuentes elegantes de Google -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@300;500&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <main class="hero">
-        <div class="contenido">
-            <h1 class="titulo">Nuestra Historia</h1>
-            <p class="subtitulo">Un pequeño rincón en el universo, solo para nosotros.</p>
-            <button class="boton" id="btn-descubrir">Descubrir más ✨</button>
-        </div>
+    <main class="contenedor-principal">
+        <!-- Sección 1: Contador de Amor -->
+        <section class="contador">
+            <h2 class="contador-titulo">Juntos desde hace</h2>
+            
+            <!-- Fila superior: Años, Meses, Semanas, Días -->
+            <div class="tiempo-fila-superior">
+                <div class="bloque"><span id="anos">0</span><small>Años</small></div>
+                <div class="bloque"><span id="meses">0</span><small>Meses</small></div>
+                <div class="bloque"><span id="semanas">0</span><small>Semanas</small></div>
+                <div class="bloque"><span id="dias">0</span><small>Días</small></div>
+            </div>
+            
+            <!-- Fila inferior: Horas, Minutos, Segundos -->
+            <div class="tiempo-fila-inferior">
+                <div class="bloque"><span id="horas">0</span><small>Horas</small></div>
+                <div class="bloque"><span id="minutos">0</span><small>Minutos</small></div>
+                <div class="bloque"><span id="segundos">0</span><small>Segundos</small></div>
+            </div>
+        </section>
+
+        <!-- Sección 2: La Sorpresa del Día -->
+        <section class="tarjeta-diaria">
+            <h2 class="diaria-titulo">Pensamiento de hoy</h2>
+            <p class="frase-del-dia" id="frase">Cargando...</p>
+            
+            <!-- Botón para tu voz -->
+            <button class="btn-voz" id="btn-voz">
+                🎙️ Escuchar mi voz
+            </button>
+
+            <!-- Reproductor de música de fondo -->
+            <div class="musica-fondo">
+                <p class="musica-titulo">Canción de hoy:</p>
+                <div class="controles-musica">
+                    <button id="btn-musica" class="btn-musica">▶️ Reproducir música</button>
+                    <audio id="audio-musica" loop>
+                        <source src="" type="audio/mpeg">
+                    </audio>
+                </div>
+            </div>
+        </section>
     </main>
 
-    <script src="scripts.js"></script>
+    <!-- Audio oculto para tu voz -->
+    <audio id="audio-voz">
+        <source src="" type="audio/mpeg">
+    </audio>
+
+    <script src="script.js"></script>
 </body>
 </html>
