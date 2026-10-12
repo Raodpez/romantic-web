@@ -127,3 +127,40 @@ btnMusica.addEventListener('click', () => {
         btnMusica.innerText = '▶️ Reproducir música';
     }
 });
+
+// ==========================================
+// 4. SELECTOR DE TEMAS
+// ==========================================
+const botonesTema = document.querySelectorAll('.btn-tema');
+const temasDisponibles = ['rosa', 'violeta-claro', 'durazno', 'violeta-oscuro', 'burgundy', 'azul-noche'];
+
+// Función para aplicar un tema
+function aplicarTema(nombreTema) {
+    // Remover todas las clases de tema
+    temasDisponibles.forEach(tema => {
+        document.body.classList.remove(`tema-${tema}`);
+    });
+    
+    // Aplicar el nuevo tema
+    document.body.classList.add(`tema-${nombreTema}`);
+    
+    // Guardar la preferencia en localStorage
+    localStorage.setItem('tema-preferido', nombreTema);
+}
+
+// Event listeners para cada botón
+botonesTema.forEach(boton => {
+    boton.addEventListener('click', () => {
+        const tema = boton.getAttribute('data-tema');
+        aplicarTema(tema);
+    });
+});
+
+// Cargar el tema guardado al iniciar (si existe)
+const temaGuardado = localStorage.getItem('tema-preferido');
+if (temaGuardado && temasDisponibles.includes(temaGuardado)) {
+    aplicarTema(temaGuardado);
+} else {
+    // Si no hay tema guardado, aplicar el rosa por defecto
+    aplicarTema('rosa');
+}
