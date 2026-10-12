@@ -27,27 +27,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // ==========================================
     // 2. ESTADO Y DATOS
     // ==========================================
-    const contenidoDiario = [
-        {
-            frase: "Eres la casualidad más bonita que el destino supo regalarme.",
-            musica: "assets/audios/musica/cancion1.mp3",
-            voz: "assets/audios/voz/voz1.mp3",
-            titulo: "Canción 1"
-        },
-        {
-            frase: "No sé hacia dónde voy, pero sé que quiero que estés a mi lado.",
-            musica: "assets/audios/musica/cancion2.mp3",
-            voz: "assets/audios/voz/voz2.mp3",
-            titulo: "Canción 2"
-        },
-        {
-            frase: "Contigo, hasta el silencio tiene la melodía perfecta.",
-            musica: "assets/audios/musica/cancion3.mp3",
-            voz: "assets/audios/voz/voz3.mp3",
-            titulo: "Canción 3"
-        }
-    ];
-
     const hoy = new Date();
     const inicioAno = new Date(hoy.getFullYear(), 0, 0);
     const diaDelAno = Math.floor((hoy - inicioAno) / (1000 * 60 * 60 * 24));
