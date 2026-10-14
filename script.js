@@ -30,11 +30,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const hoy = new Date();
     const inicioAno = new Date(hoy.getFullYear(), 0, 0);
     const diaDelAno = Math.floor((hoy - inicioAno) / (1000 * 60 * 60 * 24));
-    let indiceActual = diaDelAno % contenidoDiario.length;
+    let indiceActual = diaDelAno % contenidoDiario.length - 1;
 
-    const fechaInicio = new Date(2023, 0, 1); // ⚠️ CAMBIA ESTA FECHA
+    const fechaInicio = new Date(2022, 6, 11); // ⚠️ CAMBIA ESTA FECHA
     let intervaloAnimaciones = null;
     const temasDisponibles = ['rosa', 'violeta-claro', 'durazno', 'violeta-oscuro', 'burgundy', 'azul-noche'];
+
+    console.log("hoy: " + hoy);
+    console.log("inicioAno: " + inicioAno);
+    console.log("diaDelAno: " + diaDelAno);
+    console.log("indiceActual: " + indiceActual);
+    
+    console.log("fechaInicio: " + fechaInicio);
+    console.log("intervaloAnimaciones: " + intervaloAnimaciones);
+    console.log("temasDisponibles: " + temasDisponibles);
 
     // ==========================================
     // 3. FUNCIONES
